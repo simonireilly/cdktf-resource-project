@@ -1,0 +1,14 @@
+node_modules
+
+# Typescript stuff
+*.d.ts
+*.js
+dist
+
+# cdktf
+cdktf.out
+cdktf.log
+*terraform.*.tfstate*
+.gen
+.terraform
+help
