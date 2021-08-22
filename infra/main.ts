@@ -1,7 +1,7 @@
 import { Construct } from 'constructs';
 import { App, TerraformStack } from 'cdktf';
-import { Apigatewayv2Api, AwsProvider } from './.gen/providers/aws';
-import { Function } from './infra/lambda/function';
+import { Apigatewayv2Api, AwsProvider } from '../.gen/providers/aws';
+import { Function } from './lambda/function';
 
 class MyStack extends TerraformStack {
   constructor(scope: Construct, name: string) {
@@ -13,9 +13,9 @@ class MyStack extends TerraformStack {
     });
 
     new Function(this, 'LAMBDA_FUNCTION', {
-      path: 'src/lambda/index.ts',
-      handler: 'index.handler',
-      runtime: 'nodejs12.x',
+      path: 'src/lambda/main.ts',
+      handler: 'main.handler',
+      runtime: 'nodejs14.x',
     });
 
     new Apigatewayv2Api(this, 'HTTP_API', {

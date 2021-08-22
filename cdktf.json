@@ -1,6 +1,6 @@
 {
   "language": "typescript",
-  "app": "npm run compile && node dist/main.js",
+  "app": "yarn app",
   "terraformProviders": [
     "hashicorp/aws@~> 3.42"
   ],

@@ -21,26 +21,18 @@ export class Function extends Resource {
   constructor(scope: Construct, name: string, options: LambdaFunctionConfig) {
     super(scope, name);
 
-    // Build code in folder
-    //
-    // A builder that would take any command; e.g. bundle in the NodeJsLambdaFunction
-    //
-    // OR
-    //
-    // A built in that would expose esbuild
-    const { name: fileName, dir } = path.parse(options.path);
-
+    const { dir } = path.parse(options.path);
     const sourcePath = path.resolve(process.cwd(), options.path);
-    const outPath = path.resolve(__dirname, 'assets', dir);
-    const outFile = path.resolve(__dirname, 'assets', dir, `${fileName}.js`);
+    const outPath = path.resolve(process.cwd(), '.build', dir);
 
     require('esbuild').buildSync({
       entryPoints: [sourcePath],
-      bundle: false,
       sourcemap: true,
       platform: 'node',
-      target: ['node12'],
-      outfile: outFile,
+      target: ['node14'],
+      format: 'cjs',
+      outdir: outPath,
+      metafile: true,
     });
 
     // Copy code to archive
@@ -72,6 +64,7 @@ export class Function extends Resource {
       role: this.functionRole.arn,
       runtime: options.runtime,
       handler: options.handler,
+      sourceCodeHash: this.asset.assetHash,
     });
   }
 }

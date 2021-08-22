@@ -12,3 +12,6 @@ cdktf.log
 .gen
 .terraform
 help
+
+# Custom infra
+.build
