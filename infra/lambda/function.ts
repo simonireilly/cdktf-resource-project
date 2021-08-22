@@ -38,6 +38,7 @@ export class Function extends Resource {
       entryPoints: [sourcePath],
       bundle: false,
       sourcemap: true,
+      platform: 'node',
       target: ['node12'],
       outfile: outFile,
     });
