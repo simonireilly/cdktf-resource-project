@@ -4,6 +4,7 @@
 
 import { AssetType, Resource, TerraformAsset } from 'cdktf';
 import { Construct, ConstructOptions } from 'constructs';
+import { buildSync } from 'esbuild';
 import * as path from 'path';
 import { IamRole, LambdaFunction } from '../../.gen/providers/aws';
 
@@ -25,19 +26,34 @@ export class Function extends Resource {
     const sourcePath = path.resolve(process.cwd(), options.path);
     const outPath = path.resolve(process.cwd(), '.build', dir);
 
-    require('esbuild').buildSync({
+    const build = buildSync({
       entryPoints: [sourcePath],
+      entryNames: '[hash]/[name]',
       sourcemap: true,
       platform: 'node',
       target: ['node14'],
       format: 'cjs',
-      outdir: outPath,
       metafile: true,
+      outdir: outPath,
+    });
+
+    const outputPaths = build.metafile?.outputs
+      ? Object.keys(build.metafile?.outputs)[0]
+      : '';
+
+    const assetDir = path.dirname(outputPaths);
+    const hash = path.basename(assetDir);
+    const assetPath = path.resolve(assetDir);
+
+    console.debug('Build outputs from esbuild', {
+      hash,
+      assetPath,
+      assetDir,
     });
 
     // Copy code to archive
     this.asset = new TerraformAsset(this, 'lambda-asset', {
-      path: outPath,
+      path: assetPath,
       type: AssetType.ARCHIVE,
     });
 

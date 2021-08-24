@@ -23,5 +23,5 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'yarn'
       - run: yarn install
-      - run: npx cdktf get
+      - run: yarn get
       - run: yarn build
