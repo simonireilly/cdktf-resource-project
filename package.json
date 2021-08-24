@@ -9,7 +9,7 @@
     "app": "yarn build && node dist/infra/main.js",
     "cdktf": "cdktf",
     "get": "cdktf get",
-    "build": "tsc",
+    "build": "tsc --build",
     "clean": "tsc --build --clean",
     "synth": "cdktf synth",
     "watch": "tsc -w",
@@ -27,10 +27,8 @@
   "devDependencies": {
     "@types/aws-lambda": "^8.10.83",
     "@types/node": "^16.7.1",
-    "@types/rimraf": "^3.0.2",
     "esbuild": "^0.12.22",
     "prettier": "^2.3.2",
-    "rimraf": "^3.0.2",
     "typescript": "^4.3.5"
   }
 }
