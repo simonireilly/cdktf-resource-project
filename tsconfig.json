@@ -4,7 +4,6 @@
     "charset": "utf8",
     "declaration": true,
     "experimentalDecorators": true,
-    "incremental": true,
     "inlineSourceMap": true,
     "inlineSources": true,
     "lib": ["es2018"],
@@ -24,6 +23,6 @@
     "target": "ES2018",
     "outDir": "dist"
   },
-  "include": [".gen", "infra", ""],
+  "include": [".gen", "infra", "src"],
   "exclude": ["node_modules", "cdktf.out", "dist"]
 }
