@@ -5,7 +5,23 @@ export const handler: APIGatewayProxyHandlerV2 = async () => {
 
   return {
     statusCode: 200,
-    body: JSON.stringify({ message: 'success' }),
+    body: JSON.stringify({
+      version: '1.0.0',
+    }),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+};
+
+export const handlerV2: APIGatewayProxyHandlerV2 = async () => {
+  console.info('This is the v2 handler calling');
+
+  return {
+    statusCode: 200,
+    body: JSON.stringify({
+      version: '2.0.0',
+    }),
     headers: {
       'Content-Type': 'application/json',
     },

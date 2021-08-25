@@ -13,6 +13,9 @@ interface LambdaFunctionConfig extends ConstructOptions {
   runtime: string;
 }
 
+/**
+ * Deploy a lambda function to AWS providing runtime and code path
+ */
 export class Function extends Resource {
   readonly asset: TerraformAsset;
   readonly function: LambdaFunction;
@@ -60,11 +63,21 @@ export class Function extends Resource {
 
     this.function = new LambdaFunction(this, 'lambda-function', {
       filename: this.asset.path,
-      functionName: 'cdktf-lambda-function',
+      functionName: this.childResourceName(options.path, options.handler),
       role: this.functionRole.arn,
       runtime: options.runtime,
       handler: options.handler,
       sourceCodeHash: this.asset.assetHash,
     });
+  }
+
+  private childResourceName(srcPath: string, handler: string): string {
+    const p = path.parse(srcPath);
+    const h = path.parse(handler);
+
+    return `${p.dir.replace(/\//g, '_')}_${h.name}__${h.ext.replace(
+      /\./g,
+      ''
+    )}`;
   }
 }

@@ -1,27 +1,38 @@
 import { Construct } from 'constructs';
-import { App, TerraformStack } from 'cdktf';
-import { Apigatewayv2Api, AwsProvider } from '../.gen/providers/aws';
-import { Function } from './lambda/function';
+import { App, TerraformOutput, TerraformStack, Token } from 'cdktf';
+import { AwsProvider } from '../.gen/providers/aws';
+import { Function, Api } from './resources';
 
 class MyStack extends TerraformStack {
   constructor(scope: Construct, name: string) {
     super(scope, name);
-
-    // define resources here
     new AwsProvider(this, 'aws', {
       region: 'eu-west-1',
     });
 
-    new Function(this, 'LAMBDA_FUNCTION', {
+    const fn = new Function(this, 'LAMBDA_FUNCTION', {
       path: 'src/lambda/main.ts',
       handler: 'main.handler',
       runtime: 'nodejs14.x',
     });
 
-    new Apigatewayv2Api(this, 'HTTP_API', {
-      name: 'cdktf-http-api',
-      protocolType: 'HTTP',
-      description: `Example HTTP API generated with terraform cdktf`,
+    Token;
+
+    const fn2 = new Function(this, 'LAMBDA_FUNCTION_2', {
+      path: 'src/lambda/main.ts',
+      handler: 'main.handlerV2',
+      runtime: 'nodejs14.x',
+    });
+
+    const api = new Api(this, 'HTTP_LAMBDA_API', {
+      routes: {
+        'GET /simple': fn,
+        'GET /simple/new': fn2,
+      },
+    });
+
+    new TerraformOutput(this, 'api_url', {
+      value: api.api.apiEndpoint + '/simple',
     });
   }
 }
